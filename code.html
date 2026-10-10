@@ -26,14 +26,14 @@
           </p>
 <!-- Call to Action Cluster -->
 <div class="flex flex-wrap items-center gap-space-md w-full sm:w-auto">
-<button class="px-space-xl py-space-md rounded-full bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-wider shadow-[0_12px_32px_rgba(164,48,115,0.22)] hover:bg-inverse-surface hover:shadow-[0_16px_40px_rgba(164,48,115,0.35)] transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-space-xs cursor-pointer">
-<span class="">Shop The Glow Drop</span>
+<a href="#products" class="px-space-xl py-space-md rounded-full bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-wider shadow-[0_12px_32px_rgba(164,48,115,0.22)] hover:bg-inverse-surface hover:shadow-[0_16px_40px_rgba(164,48,115,0.35)] transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-space-xs cursor-pointer">
+<span class="">Explore the Glow Drop</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</button>
-<button class="px-space-lg py-space-md rounded-full bg-secondary-fixed/50 hover:bg-secondary-fixed text-primary font-label-lg text-label-lg uppercase tracking-wider transition-all duration-300 shadow-sm flex items-center justify-center gap-space-xs cursor-pointer">
+</a>
+<a href="#glow-quiz" class="px-space-lg py-space-md rounded-full bg-secondary-fixed/50 hover:bg-secondary-fixed text-primary font-label-lg text-label-lg uppercase tracking-wider transition-all duration-300 shadow-sm flex items-center justify-center gap-space-xs cursor-pointer">
 <span class="material-symbols-outlined text-[18px] text-secondary">auto_awesome</span>
 <span class="">Take the Glow Quiz</span>
-</button>
+</a>
 </div>
 <!-- Proof Metrics Bar -->
 <div class="grid grid-cols-3 gap-gutter pt-space-xl mt-space-md w-full max-w-lg">
@@ -127,7 +127,7 @@
 </div>
 </section>
 <!-- Section 1: Bestselling Glow Essentials -->
-<section class="w-full py-space-xl bg-surface">
+<section id="products" style="scroll-margin-top: 7rem" class="w-full py-space-xl bg-surface">
 <div class="max-w-[1360px] mx-auto px-margin">
 <!-- Section Header -->
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
@@ -137,8 +137,8 @@
           </div>
 <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Bestselling Glow Essentials</h2>
 </div>
-<a class="inline-flex items-center gap-space-xs font-label-md text-label-md uppercase tracking-wider text-primary hover:text-secondary transition-colors" href="#">
-<span class="">Explore All 24 Shades</span>
+<a class="inline-flex items-center gap-space-xs font-label-md text-label-md uppercase tracking-wider text-primary hover:text-secondary transition-colors" href="#glow-quiz">
+<span class="">See Shade Suggestions</span>
 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
 </a>
 </div>
@@ -415,7 +415,7 @@
 </div>
 </section>
 <!-- Section 3: Interactive Glow Shade Matcher Preview -->
-<section class="w-full py-space-xl bg-gradient-to-br from-secondary-fixed/50 via-surface-container-lowest to-secondary-fixed/30 relative overflow-hidden">
+<section id="glow-quiz" style="scroll-margin-top: 7rem" class="w-full py-space-xl bg-gradient-to-br from-secondary-fixed/50 via-surface-container-lowest to-secondary-fixed/30 relative overflow-hidden">
 <div class="max-w-[1360px] mx-auto px-margin relative z-10">
 <div class="bg-surface-container-lowest rounded-3xl p-space-lg lg:p-space-xl shadow-[0_20px_50px_rgba(164,48,115,0.12)]">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
@@ -451,7 +451,7 @@
 <!-- Quiz CTA -->
 <div class="flex items-center gap-space-md w-full">
 <button class="px-space-lg py-space-md rounded-full bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:bg-secondary transition-colors cursor-pointer flex-1 text-center shadow-md">
-                View Matched Formula Match ($54 Duo)
+                See My Shade Direction
               </button>
 </div>
 </div>
@@ -675,15 +675,63 @@
 </section>
 </div>
 <script>
+  let selectedTone = 'Cool & Rosy';
+  let selectedShade = 'Rosy Pearl';
+  let selectedFinish = 'Glass Sheen';
+
   function selectTone(btn, shadeName) {
     const container = document.getElementById('undertone-buttons');
     if (!container) return;
-    const buttons = container.querySelectorAll('button');
-    buttons.forEach(b => {
-      b.className = 'px-space-md py-space-xs rounded-full bg-surface-container-low text-on-surface font-label-sm text-label-sm uppercase tracking-wider hover:bg-secondary-fixed transition-colors cursor-pointer';
+    container.querySelectorAll('button').forEach(button => {
+      button.className = 'px-space-md py-space-xs rounded-full bg-surface-container-low text-on-surface font-label-sm text-label-sm uppercase tracking-wider hover:bg-secondary-fixed transition-colors cursor-pointer';
     });
     btn.className = 'px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider transition-colors cursor-pointer';
+    selectedTone = btn.textContent.trim();
+    selectedShade = shadeName;
   }
+
+  (() => {
+    const quiz = document.getElementById('glow-quiz');
+    const finishLabel = [...document.querySelectorAll('label')]
+      .find(label => label.textContent.trim().startsWith('2. Finish Intensity'));
+    const finishButtons = finishLabel?.parentElement.querySelectorAll('button');
+    const matchButton = [...document.querySelectorAll('button')]
+      .find(button => button.textContent.trim() === 'See My Shade Direction');
+    if (!quiz || !matchButton) return;
+
+    finishButtons?.forEach(button => button.addEventListener('click', () => {
+      selectedFinish = button.textContent.trim();
+      finishButtons.forEach(option => {
+        option.className = 'py-space-xs px-space-sm rounded-xl bg-surface-container-low text-on-surface font-label-sm text-label-sm text-center border-0 cursor-pointer';
+      });
+      button.className = 'py-space-xs px-space-sm rounded-xl bg-secondary-fixed/60 text-primary font-label-sm text-label-sm font-bold text-center border-0 cursor-pointer';
+    }));
+
+    const result = document.createElement('div');
+    result.className = 'w-full mt-space-sm rounded-2xl bg-secondary-fixed/50 p-space-md text-on-surface';
+    result.setAttribute('role', 'status');
+    result.setAttribute('aria-live', 'polite');
+    result.tabIndex = -1;
+    result.hidden = true;
+    matchButton.parentElement.parentElement.insertAdjacentElement('afterend', result);
+    matchButton.addEventListener('click', () => {
+      result.replaceChildren();
+      const profile = document.createElement('p');
+      profile.className = 'font-body-sm text-body-sm';
+      profile.textContent = `Your glow profile: ${selectedTone} · ${selectedFinish}`;
+      const shade = document.createElement('p');
+      shade.className = 'font-label-md text-label-md font-bold mt-space-xs';
+      shade.textContent = `Suggested shade direction: ${selectedShade}`;
+      result.append(profile, shade);
+      result.hidden = false;
+      result.focus();
+    });
+    document.querySelectorAll('a[href="#glow-quiz"]').forEach(link => {
+      link.addEventListener('click', () => {
+        window.setTimeout(() => document.querySelector('#undertone-buttons button')?.focus(), 350);
+      });
+    });
+  })();
 </script></main><footer class="w-full bg-surface-container-low pt-space-xl pb-space-lg"><div class="max-w-[1360px] mx-auto px-margin"><div class="bg-secondary-fixed/50 rounded-xl p-space-xl mb-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="max-w-lg"><h3 class="font-headline-md text-headline-md text-on-surface mb-space-xs">Join the Glow Club — Get 15% Off</h3><p class="font-body-md text-body-md text-on-surface-variant">Unlock exclusive drops, VIP masterclasses, and tailored shade recommendations directly to your inbox.</p></div><div class="w-full md:w-auto flex flex-col sm:flex-row gap-space-sm"><input class="px-space-md py-space-sm rounded-full bg-surface-container-lowest font-body-sm text-body-sm text-on-surface border-0 outline-none w-full sm:w-72 shadow-[0_1px_8px_rgba(0,0,0,0.04)] focus:ring-2 focus:ring-secondary" placeholder="Enter your email address" type="email"><button class="px-space-lg py-space-sm rounded-full bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:bg-inverse-surface transition-colors shadow-lg hover:shadow-secondary-fixed-dim/50">Subscribe</button></div></div><div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-space-xl"><div class="flex flex-col gap-space-sm"><div class="relative flex items-center gap-space-sm py-1"><div class="relative flex items-center justify-center"><div class="absolute -inset-1 rounded-full bg-gradient-to-r from-secondary-fixed-dim via-secondary-container to-secondary opacity-50 blur-sm pointer-events-none"></div><img alt="She's Glowing Shimmer Logo" class="relative h-10 w-auto object-contain drop-shadow-[0_2px_10px_rgba(164,48,115,0.4)]" src="https://lh3.googleusercontent.com/aida/AEtjO1UvsNyMJ6L-ia9l0XmwLmeAXnybf5PywjRdPllKT-QPUrix-FdkXsQE2vZcb5GqvYwiG4o4J-iVJhGRRQLzH4pcrAl_8YBJX19RsXKrWqeOSs4f29WCFnb-BxP-tOlyXXmt8de3lBpKKD6QFjjkvVNyBumtoGnGXKgNr1-vYQM61QedHpbGv8nZbYAMSCeXXYPOnIywQSrqlZOVL5x5h4EWduep-tbhQbIQtE0kKBLAZS4izcz0MgMucmE"><span class="material-symbols-outlined text-[15px] text-primary ml-1" style="font-variation-settings: &quot;FILL&quot; 1;">auto_awesome</span></div><div class="relative flex items-center"><span class="font-headline-md text-[26px] font-bold tracking-tight text-primary select-none">She's Glowing</span><span class="material-symbols-outlined text-[15px] text-primary ml-1" style="font-variation-settings: &quot;FILL&quot; 1;">auto_awesome</span></div></div><p class="font-body-sm text-body-sm text-on-surface-variant">Luminous beauty engineered with high-vibrancy pigments and nourishing botanical extracts. Clean, cruelty-free, and crafted for modern radiance.</p><div class="flex items-center gap-space-sm mt-space-xs text-on-surface-variant"><span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer">public</span><span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer">photo_camera</span><span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer">videocam</span><span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer">forum</span></div></div><div><h4 class="font-label-lg text-label-lg uppercase tracking-wider text-on-surface mb-space-md font-bold">Shop Radiance</h4><ul class="flex flex-col gap-space-xs"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">All Formulations</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Dewy Highlighters</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Gloss Serums &amp; Balms</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Radiant Blushes</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Clean Complexion</li></ul></div><div><h4 class="font-label-lg text-label-lg uppercase tracking-wider text-on-surface mb-space-md font-bold">Client Care</h4><ul class="flex flex-col gap-space-xs"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Track Order Status</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Shipping &amp; Worldwide Delivery</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Returns &amp; Glow Guarantee</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Virtual Shade Match</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface cursor-pointer">Contact Concierge</li></ul></div><div><h4 class="font-label-lg text-label-lg uppercase tracking-wider text-on-surface mb-space-md font-bold">Ethics &amp; Standards</h4><p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">Certified 100% Leaping Bunny Cruelty-Free, clean formulation standard, sustainably harvested mica, and post-consumer recycled glass packaging.</p><div class="flex flex-wrap gap-space-xs"><span class="px-space-sm py-space-xs rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant font-label-sm text-label-sm uppercase">Vegan</span><span class="px-space-sm py-space-xs rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant font-label-sm text-label-sm uppercase">Cruelty-Free</span><span class="px-space-sm py-space-xs rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant font-label-sm text-label-sm uppercase">Clean Formula</span></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between text-on-surface-variant font-body-sm text-body-sm gap-space-sm"><p class="">© 2025 She's Glowing Beauty LLC. All Rights Reserved.</p><div class="flex items-center gap-space-md font-label-sm text-label-sm uppercase"><span class="hover:text-on-surface cursor-pointer">Privacy Policy</span><span class="hover:text-on-surface cursor-pointer">Terms of Service</span><span class="hover:text-on-surface cursor-pointer">Accessibility</span><span class="hover:text-on-surface cursor-pointer">Cookie Settings</span></div></div></div></footer>
 
 </body></html>
