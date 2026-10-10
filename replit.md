@@ -1,4 +1,4 @@
-# Imported She's Glowing page
+# She's Glowing Shopify storefront
 
 ## Run
 
@@ -9,15 +9,26 @@ python3 server.py
 ```
 
 The server binds to `0.0.0.0:5000`. Both `/` and `/code.html` serve the
-original `code.html` unchanged. Other paths return 404 so the uploaded archive
-and internal workspace files are not publicly served.
+imported `code.html` with the Shopify storefront client injected. Other paths
+return 404 so the uploaded archive and internal workspace files are not served.
 
-No third-party Python packages, secrets, or backend services are required.
-The page uses externally hosted Tailwind CSS, Google Fonts, and images, so
-those resources require an internet connection.
+The bag uses the connected Shopify Storefront API for products, cart changes,
+and Shopify-hosted checkout. The server reads the Storefront settings from the
+Replit Shopify connection; never put its token in browser code or ask a buyer
+to provide it. Shopify must have published products for them to appear in the
+store. Add and publish products in Shopify; this app does not create sample
+products or inventory.
 
-## Scope
+No third-party Python packages are required. Tailwind CSS, Google Fonts, and
+product images load from external hosts, so the page needs an internet
+connection.
 
-This is the imported static storefront, not a complete ecommerce backend.
-Keep the existing HTML and design guide; do not migrate or restructure the
-project as part of setup.
+## Storefront behavior
+
+- Add published, available Shopify variants to the bag.
+- Keep the Shopify cart ID in the visitor's browser storage so the bag survives
+  refreshes on that browser.
+- Change item quantities or remove items; Shopify remains the source of truth
+  for prices, product availability, and totals.
+- Continue checkout on Shopify. Payment collection, shipping, and taxes happen
+  there, not in this app.
