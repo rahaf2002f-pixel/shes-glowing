@@ -58,6 +58,8 @@
   let cartId = null;
   let currentCart = null;
   let products = [];
+  let selectedTone = "Cool & Rosy";
+  let selectedFinish = "Glass Sheen";
 
   try {
     cartId = localStorage.getItem(CART_STORAGE_KEY);
@@ -293,6 +295,7 @@
         "We couldn't load products from Shopify. Check your connection and try again."
       );
       notice.setAttribute("role", "alert");
+      notice.tabIndex = -1;
       const retry = text("button", "sg-catalog-retry", "Try again");
       retry.type = "button";
       retry.addEventListener("click", loadCatalog);
@@ -306,16 +309,123 @@
         "No products are published to this Shopify storefront yet. Publish products in Shopify and they will appear here."
       );
       notice.setAttribute("role", "status");
+      notice.tabIndex = -1;
       grid.append(notice);
       return;
     }
     items.forEach((product) => grid.append(createProductCard(product)));
   }
 
-  const catalogHeading = grid.closest("section")?.querySelector("h2, h3");
-  if (catalogHeading) {
-    catalogHeading.id ||= "shopify-product-catalog";
+  grid.id = "shopify-product-catalog";
+  const quizHeading = [...document.querySelectorAll("h2")]
+    .find((heading) => heading.textContent.trim() === "Find Your Perfect Radiance");
+  const quizSection = quizHeading?.closest("section");
+  if (quizSection) quizSection.id = "glow-quiz";
+  const toneButtons = document.querySelector("#undertone-buttons");
+  const finishLabel = [...document.querySelectorAll("label")]
+    .find((label) => label.textContent.trim().startsWith("2. Finish Intensity"));
+  const finishButtons = finishLabel?.parentElement.querySelectorAll("button");
+  const quizAction = [...document.querySelectorAll("button")]
+    .find((button) => button.textContent.toLowerCase().includes("view matched formula"));
+  const quizResult = document.createElement("div");
+  quizResult.className = "sg-quiz-result";
+  quizResult.setAttribute("role", "status");
+  quizResult.setAttribute("aria-live", "polite");
+  quizResult.tabIndex = -1;
+  quizResult.hidden = true;
+  quizAction?.parentElement.parentElement.insertAdjacentElement("afterend", quizResult);
+  if (quizAction) quizAction.textContent = "Find My Glow Match";
+
+  toneButtons?.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button || !toneButtons.contains(button)) return;
+    selectedTone = button.textContent.trim();
+    quizResult.hidden = true;
+  });
+
+  finishButtons?.forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedFinish = button.textContent.trim();
+      finishButtons.forEach((option) => {
+        option.classList.remove("bg-secondary-fixed/60", "text-primary", "font-bold");
+        option.classList.add("bg-surface-container-low", "text-on-surface");
+      });
+      button.classList.remove("bg-surface-container-low", "text-on-surface");
+      button.classList.add("bg-secondary-fixed/60", "text-primary", "font-bold");
+      quizResult.hidden = true;
+    });
+  });
+
+  function showQuizMatch() {
+    quizResult.replaceChildren();
+    const availableProducts = products.filter((product) =>
+      product.variants?.some((variant) => variant.availableForSale)
+    );
+    if (!availableProducts.length) {
+      quizResult.append(text(
+        "p",
+        "",
+        `Your choices: ${selectedTone} · ${selectedFinish}. There are no available Shopify products to match yet.`
+      ));
+      quizResult.hidden = false;
+      quizResult.focus();
+      return;
+    }
+
+    const keywords = {
+      "Cool & Rosy": ["rosy", "pink", "cool", "pearl"],
+      "Warm & Golden": ["golden", "warm", "peach", "honey"],
+      "Neutral Peach": ["neutral", "peach", "champagne"],
+      "Deep Radiant": ["deep", "bronze", "amber", "rich"],
+    }[selectedTone] || [];
+    let match = null;
+    let matchScore = 0;
+    for (const product of availableProducts) {
+      const variant = product.variants.find((item) => item.availableForSale);
+      const searchable = `${product.title} ${variant?.title || ""}`.toLowerCase();
+      const score = keywords.reduce(
+        (sum, keyword) => sum + (searchable.includes(keyword) ? 1 : 0),
+        0
+      );
+      if (!match || score > matchScore) {
+        match = { product, variant };
+        matchScore = score;
+      }
+    }
+
+    if (matchScore === 0) {
+      quizResult.append(text(
+        "p",
+        "",
+        `No exact shade match found for ${selectedTone} with ${selectedFinish}. Browse the available products to choose what suits you.`
+      ));
+    } else {
+      quizResult.append(
+        text("p", "sg-quiz-match-label", "Your glow match"),
+        text("strong", "", match.product.title),
+        text(
+          "p",
+          "",
+          `${match.variant.title && match.variant.title.toLowerCase() !== "default title" ? `${match.variant.title} · ` : ""}${money(match.variant.price)}`
+        )
+      );
+    }
+    const viewButton = text("button", "sg-quiz-view-product", "View in the shop");
+    viewButton.type = "button";
+    viewButton.addEventListener("click", () => {
+      const card = grid.querySelector(
+        `[data-shop-handle="${CSS.escape(match.product.handle || "")}"]`
+      );
+      card?.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => card?.querySelector("[data-add-to-bag]")?.focus(), 350);
+    });
+    quizResult.append(viewButton);
+    quizResult.hidden = false;
+    quizResult.focus();
   }
+
+  quizAction?.addEventListener("click", showQuizMatch);
+
   const featuredTitle = [...document.querySelectorAll("h4")]
     .find((heading) => heading.textContent.trim() === "Celestial Dew Drop");
   const featuredCard = featuredTitle?.closest(".absolute");
@@ -357,6 +467,23 @@
     if (label.includes("shop the glow drop")) {
       event.preventDefault();
       grid.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (
+        grid.getAttribute("aria-busy") === "true"
+        && !grid.querySelector('[role="status"], [role="alert"]')
+      ) {
+        loadCatalog();
+      }
+      window.setTimeout(() => {
+        const destination =
+          grid.querySelector('[data-add-to-bag]:not(:disabled)')
+          || grid.querySelector('[data-add-to-bag]')
+          || grid.querySelector('[role="status"], [role="alert"]');
+        destination?.focus();
+      }, 350);
+    } else if (label.includes("take the glow quiz")) {
+      event.preventDefault();
+      quizSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(() => toneButtons?.querySelector("button")?.focus(), 350);
     } else if (label.startsWith("shop ")) {
       const requested = label.replace(/^shop\s+/, "").replace(/\s+/g, " ");
       const match = products.find((product) =>

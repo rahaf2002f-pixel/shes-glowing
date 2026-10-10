@@ -275,6 +275,45 @@
   font-size: 22px;
 }
 
+.sg-quiz-result {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f9eaf1;
+  color: #26171c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sg-quiz-result[hidden] {
+  display: none !important;
+}
+
+.sg-quiz-result p {
+  margin: 4px 0;
+}
+
+.sg-quiz-match-label {
+  color: #85145a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.sg-quiz-view-product {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  font: 700 11px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer;
+}
+
 @media (max-width: 480px) {
   .sg-cart-panel {
     padding-right: 18px;
