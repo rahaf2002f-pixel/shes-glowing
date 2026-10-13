@@ -1,0 +1,1 @@
+- [Clerk after ZIP imports](clerk-after-zip-imports.md) — rename ZIP-derived Replit project names before provisioning Clerk.
