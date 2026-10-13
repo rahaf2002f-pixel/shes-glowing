@@ -1,0 +1,92 @@
+name: shes-glowing-design description: Design and improve the She’s Glowing beauty e-commerce website with a premium feminine brand identity, responsive layouts, and polished shopping experiences while preserving existing functionality.
+
+She’s Glowing — Design Skill
+
+Use this skill when designing, updating, or reviewing the She’s Glowing beauty e-commerce website.
+
+Brand identity
+
+● Keep the brand name exactly as She’s Glowing.
+
+● Create an elegant, feminine, modern beauty-store identity.
+
+● Use blush pink, ivory, cream, white, and subtle champagne-gold accents.
+
+● Use readable, elegant typography and consistent spacing.
+
+● Keep the design polished and cohesive across all pages.
+
+Visual design
+
+● Aim for a premium beauty-shopping experience: clean, inviting, and product-focused.
+
+● Use high-quality beauty/product imagery where available.
+
+● Use clear visual hierarchy, generous whitespace, and consistent cards and buttons.
+
+● Add subtle transitions and hover effects; avoid distracting animations.
+
+● Suggested homepage headline: Your Glow, Your Rules.
+
+Store pages and components
+
+● Homepage hero section with a clear Shop Now action.
+
+● Sections for New Arrivals, Best Sellers, and Glow Picks.
+
+● Product cards showing available product images, names, prices, and ratings.
+
+● Product categories such as Makeup, Skincare, Perfumes, and Beauty Tools when relevant to the existing catalog.
+
+● Product detail pages with descriptions and image galleries when supported.
+
+● Search, category filters, and sorting.
+
+● Shopping cart and wishlist.
+
+● Helpful footer links and social-media links when configured.
+
+● Optional future features: Find Your Glow product discovery and Glow Rewards loyalty points. Do not present these as working features unless implemented.
+
+User experience and accessibility
+
+● Make navigation simple and consistent.
+
+● Use clear feedback for adding items to cart or wishlist.
+
+● Include useful loading, empty, and error states.
+
+● Ensure readable contrast, labels for form fields, keyboard-friendly controls, and touch-friendly buttons.
+
+● Make the site work well on mobile, tablet, and desktop.
+
+● Prevent horizontal scrolling, overlapping content, and clipped components.
+
+Implementation workflow
+
+1. Inspect the existing project, framework, components, and database connections before editing.
+
+2. Identify the current design and preserve useful existing work.
+
+3. Apply changes incrementally and reuse existing components and design tokens where possible.
+
+4. Keep real functionality connected to the existing backend; do not replace it with static mockups.
+
+5. Do not claim a button or feature works unless it actually works.
+
+6. Preserve authentication, product data, cart logic, and database configuration.
+
+7. Test key pages and interactions at mobile, tablet, and desktop sizes.
+
+8. Fix visible layout issues, broken interactions, and errors caused by the changes.
+
+9. Summarize what changed and mention anything that still needs setup.
+
+Important constraints
+
+● Do not expose database credentials, API keys, or secrets in source code or screenshots.
+
+● Do not overwrite or delete existing project files unnecessarily.
+
+● If a requested change could break an existing feature, inspect it first and choose the least disruptive appr
+
