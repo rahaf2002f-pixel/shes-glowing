@@ -19,13 +19,13 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python3 server.py"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
@@ -37,4 +37,4 @@ timeoutMs = 180000
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["python3", "server.py"]
+run = ["npm", "run", "start"]

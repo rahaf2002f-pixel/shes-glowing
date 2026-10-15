@@ -5,14 +5,15 @@
 Use the **Start application** workflow, or run:
 
 ```sh
-python3 server.py
+npm run dev
 ```
 
-The server binds to `0.0.0.0:5000`. Both `/` and `/code.html` serve the static
-page. Other paths return 404 so internal workspace files are not served.
+Next.js binds to `0.0.0.0:5000`. The storefront at `/` is served by the Node.js
+route in `app/route.ts`; backend endpoints belong in `app/api/`. The `/api/health`
+endpoint is a basic availability check.
 
-No third-party Python packages are required. Tailwind CSS, Google Fonts, and
-page images load from external hosts, so the page needs an internet connection.
+The source storefront is `code.html`. Tailwind CSS, Google Fonts, and page
+images load from external hosts, so the page needs an internet connection.
 
 ## Page behavior
 
